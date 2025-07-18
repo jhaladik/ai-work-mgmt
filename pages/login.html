@@ -297,7 +297,9 @@
             }
         });
 
-        // Registration Handler
+        // Add this debugging to your login.html registration handler (around line 300)
+
+        // Registration Handler - ADD DEBUGGING
         document.getElementById('registerFormData').addEventListener('submit', async (e) => {
             e.preventDefault();
             clearMessage('registerMessage');
@@ -321,6 +323,10 @@
                 gdprConsent: formData.get('gdprConsent') === 'on'
             };
 
+            // DEBUG: Log the data being sent
+            console.log('Registration data being sent:', data);
+            console.log('API endpoint:', `${API_BASE}/auth/register`);
+
             try {
                 const response = await fetch(`${API_BASE}/auth/register`, {
                     method: 'POST',
@@ -330,7 +336,12 @@
                     body: JSON.stringify(data)
                 });
 
+                // DEBUG: Log response details
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
                 const result = await response.json();
+                console.log('Response body:', result);
 
                 if (response.ok) {
                     // Store token

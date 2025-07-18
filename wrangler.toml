@@ -4,11 +4,6 @@ main = "src/workers/api-worker.js"
 compatibility_date = "2024-01-01"
 workers_dev = true
 
-# Replace these with your actual IDs from:
-# wrangler d1 create ai-work-mgmt-db
-# wrangler kv:namespace create "SESSIONS"
-# wrangler kv:namespace create "SESSIONS" --preview
-
 [[d1_databases]]
 binding = "DB"
 database_name = "ai-work-mgmt-db"
@@ -21,3 +16,5 @@ preview_id = "a7c52c45db524229b531a2b048233b61"
 
 [vars]
 ENVIRONMENT = "development"
+# Add this JWT secret (use a strong random string in production)
+JWT_SECRET = "2aeb89559ad95a81e27cc08eb09e73ca62b16098065f18f0bf555704575eb8c3d99ce4b5c026a2786a605e22dacd0d97e92325ae6d5c3f12e6536fce4f8bd3bb"
