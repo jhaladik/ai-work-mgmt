@@ -1,71 +1,23 @@
-# Wrangler configuration for AI Work Management System - Phase 1
+# Simplified working configuration for AI Work Management System
 name = "ai-work-mgmt"
 main = "src/workers/api-worker.js"
 compatibility_date = "2024-01-01"
-compatibility_flags = ["nodejs_compat"]
-
-# Workers development (moved to correct location)
 workers_dev = true
 
-# Account configuration
-account_id = "1978b4e1224bd0d5eddd038889ea86fc" # Add your Cloudflare account ID
+# Replace these with your actual IDs from:
+# wrangler d1 create ai-work-mgmt-db
+# wrangler kv:namespace create "SESSIONS"
+# wrangler kv:namespace create "SESSIONS" --preview
 
-# D1 Database (you need to create this first - see setup steps below)
 [[d1_databases]]
-binding = "DB" 
+binding = "DB"
 database_name = "ai-work-mgmt-db"
 database_id = "ba604ad4-f750-4fbe-b702-e2b698b0dcb6"
 
-# KV Namespaces (you need to create these first - see setup steps below)
 [[kv_namespaces]]
 binding = "SESSIONS"
 id = "d08b2f068c944da1ace819d9441bee68"
 preview_id = "a7c52c45db524229b531a2b048233b61"
 
-# Environment Variables (non-sensitive)
 [vars]
 ENVIRONMENT = "development"
-API_VERSION = "v1"
-CORS_ORIGIN = "*"
-RATE_LIMIT_ENABLED = "true"
-
-# Development environment
-[env.development]
-name = "ai-work-mgmt-dev"
-vars = { ENVIRONMENT = "development" }
-
-# Staging environment
-[env.staging]
-name = "ai-work-mgmt-staging"
-vars = { ENVIRONMENT = "staging", CORS_ORIGIN = "https://staging.yourcompany.com" }
-
-# Production environment
-[env.production]
-name = "ai-work-mgmt-prod"
-vars = { ENVIRONMENT = "production", CORS_ORIGIN = "https://yourcompany.com" }
-
-# Routes (update with your domain)
-[[routes]]
-pattern = "api.yourcompany.com/*"
-zone_name = "yourcompany.com"
-
-# Observability
-[observability]
-enabled = true
-
-# Build configuration
-# [build]
-# command = "npm run build"
-# cwd = "."
-
-# Secrets (set using wrangler secret put)
-# JWT_SECRET - Secret key for JWT tokens
-# DATABASE_URL - Database connection URL (if needed)
-
-# Analytics Engine (optional for advanced tracking)
-# Uncomment after Phase 6 when analytics are implemented
-# [[analytics_engine_datasets]]
-# binding = "ANALYTICS"
-# dataset = "ai_work_mgmt_events"
-
-# Worker limits are automatically managed by Cloudflare

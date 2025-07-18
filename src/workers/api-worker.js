@@ -1,8 +1,8 @@
 // Main API Worker for AI Work Management System
 // Routes requests to appropriate handlers and provides middleware
 
-import { authenticateRequest } from './utils/auth-utils.js';
-import { errorResponse, successResponse, healthCheck } from './utils/db-utils.js';
+import { authenticateRequest } from '../utils/auth-utils.js';
+import { errorResponse, successResponse, healthCheck } from '../utils/db-utils.js';
 
 export default {
   async fetch(request, env, ctx) {
