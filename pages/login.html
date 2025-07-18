@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - AI Work Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#8B5CF6'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/index.html" class="text-xl font-bold text-primary">AI WorkFlow</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/index.html" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Auth Toggle -->
+            <div class="text-center">
+                <div class="flex bg-white rounded-lg p-1 shadow-sm">
+                    <button onclick="showLogin()" id="loginTab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium bg-primary text-white">
+                        Sign In
+                    </button>
+                    <button onclick="showRegister()" id="registerTab" class="flex-1 py-2 px-4 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+                        Sign Up
+                    </button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="bg-white rounded-lg shadow-md p-8">
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-900">Welcome Back</h2>
+                    <p class="mt-2 text-gray-600">Sign in to your account</p>
+                </div>
+
+                <form id="loginFormData" class="space-y-6">
+                    <div>
+                        <label for="loginEmail" class="block text-sm font-medium text-gray-700">Email address</label>
+                        <input type="email" id="loginEmail" name="email" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+
+                    <div>
+                        <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="loginPassword" name="password" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="rememberMe" name="rememberMe" type="checkbox" 
+                                   class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <label for="rememberMe" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                        </div>
+                        <div class="text-sm">
+                            <a href="#" class="font-medium text-primary hover:text-blue-500">Forgot your password?</a>
+                        </div>
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="loginSpinner" class="hidden">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span id="loginText">Sign In</span>
+                    </button>
+                </form>
+
+                <!-- Error/Success Messages -->
+                <div id="loginMessage" class="mt-4 hidden"></div>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registerForm" class="bg-white rounded-lg shadow-md p-8 hidden">
+                <div class="text-center mb-6">
+                    <h2 class="text-3xl font-bold text-gray-900">Create Account</h2>
+                    <p class="mt-2 text-gray-600">Join AI WorkFlow today</p>
+                </div>
+
+                <form id="registerFormData" class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="registerName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" id="registerName" name="name" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="registerRole" class="block text-sm font-medium text-gray-700">Role</label>
+                            <select id="registerRole" name="role" required onchange="toggleOrgName()"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                                <option value="">Select Role</option>
+                                <option value="ceo">CEO</option>
+                                <option value="manager">Manager</option>
+                                <option value="employee">Employee</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="organizationNameField" class="hidden">
+                        <label for="organizationName" class="block text-sm font-medium text-gray-700">Organization Name</label>
+                        <input type="text" id="organizationName" name="organizationName"
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                        <p class="mt-1 text-xs text-gray-500">As CEO, you'll create a new organization</p>
+                    </div>
+
+                    <div>
+                        <label for="registerEmail" class="block text-sm font-medium text-gray-700">Email address</label>
+                        <input type="email" id="registerEmail" name="email" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+
+                    <div>
+                        <label for="registerPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="registerPassword" name="password" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                        <p class="mt-1 text-xs text-gray-500">8+ characters with uppercase, lowercase, and number</p>
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="gdprConsent" name="gdprConsent" type="checkbox" required
+                                   class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="gdprConsent" class="text-gray-700">
+                                I agree to the <a href="#" class="text-primary hover:text-blue-500">Terms of Service</a> 
+                                and <a href="#" class="text-primary hover:text-blue-500">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="registerSpinner" class="hidden">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span id="registerText">Create Account</span>
+                    </button>
+                </form>
+
+                <!-- Error/Success Messages -->
+                <div id="registerMessage" class="mt-4 hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = '/api'; // Change this to your actual API endpoint
+
+        // UI Controls
+        function showLogin() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('loginTab').classList.add('bg-primary', 'text-white');
+            document.getElementById('loginTab').classList.remove('text-gray-700');
+            document.getElementById('registerTab').classList.remove('bg-primary', 'text-white');
+            document.getElementById('registerTab').classList.add('text-gray-700');
+        }
+
+        function showRegister() {
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('registerTab').classList.add('bg-primary', 'text-white');
+            document.getElementById('registerTab').classList.remove('text-gray-700');
+            document.getElementById('loginTab').classList.remove('bg-primary', 'text-white');
+            document.getElementById('loginTab').classList.add('text-gray-700');
+        }
+
+        function toggleOrgName() {
+            const role = document.getElementById('registerRole').value;
+            const orgField = document.getElementById('organizationNameField');
+            const orgInput = document.getElementById('organizationName');
+            
+            if (role === 'ceo') {
+                orgField.classList.remove('hidden');
+                orgInput.required = true;
+            } else {
+                orgField.classList.add('hidden');
+                orgInput.required = false;
+                orgInput.value = '';
+            }
+        }
+
+        function showMessage(elementId, message, type = 'error') {
+            const messageEl = document.getElementById(elementId);
+            messageEl.innerHTML = `
+                <div class="rounded-md p-4 ${type === 'error' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <p class="text-sm">${message}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            messageEl.classList.remove('hidden');
+        }
+
+        function clearMessage(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        function setLoading(formType, loading) {
+            const spinner = document.getElementById(`${formType}Spinner`);
+            const text = document.getElementById(`${formType}Text`);
+            const button = document.querySelector(`#${formType}FormData button[type="submit"]`);
+            
+            if (loading) {
+                spinner.classList.remove('hidden');
+                text.textContent = 'Processing...';
+                button.disabled = true;
+            } else {
+                spinner.classList.add('hidden');
+                text.textContent = formType === 'login' ? 'Sign In' : 'Create Account';
+                button.disabled = false;
+            }
+        }
+
+        // Login Handler
+        document.getElementById('loginFormData').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessage('loginMessage');
+            setLoading('login', true);
+
+            const formData = new FormData(e.target);
+            const data = {
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Store token
+                    localStorage.setItem('authToken', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    
+                    showMessage('loginMessage', 'Login successful! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1000);
+                } else {
+                    showMessage('loginMessage', result.error || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('loginMessage', 'Network error. Please try again.');
+            } finally {
+                setLoading('login', false);
+            }
+        });
+
+        // Registration Handler
+        document.getElementById('registerFormData').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessage('registerMessage');
+            setLoading('register', true);
+
+            const formData = new FormData(e.target);
+            
+            // Validate password confirmation
+            if (formData.get('password') !== formData.get('confirmPassword')) {
+                showMessage('registerMessage', 'Passwords do not match');
+                setLoading('register', false);
+                return;
+            }
+
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: formData.get('role'),
+                organizationName: formData.get('organizationName'),
+                gdprConsent: formData.get('gdprConsent') === 'on'
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Store token
+                    localStorage.setItem('authToken', result.token);
+                    localStorage.setItem('user', JSON.stringify(result.user));
+                    
+                    showMessage('registerMessage', 'Account created successfully! Redirecting...', 'success');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1500);
+                } else {
+                    showMessage('registerMessage', result.error || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showMessage('registerMessage', 'Network error. Please try again.');
+            } finally {
+                setLoading('register', false);
+            }
+        });
+
+        // Check if user is already logged in
+        if (localStorage.getItem('authToken')) {
+            window.location.href = '/dashboard.html';
+        }
+    </script>
+</body>
+</html>

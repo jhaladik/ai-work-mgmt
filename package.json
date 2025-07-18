@@ -1,0 +1,19 @@
+{
+    "name": "ai-work-mgmt",
+    "version": "1.0.0",
+    "description": "AI-powered work management system",
+    "main": "src/workers/api-worker.js",
+    "scripts": {
+      "dev": "wrangler dev",
+      "deploy": "wrangler deploy",
+      "deploy:staging": "wrangler deploy --env staging",
+      "deploy:prod": "wrangler deploy --env production",
+      "db:migrate": "wrangler d1 execute ai-work-mgmt-db --file=database/schema.sql",
+      "db:migrate:staging": "wrangler d1 execute ai-work-mgmt-db --env staging --file=database/schema.sql",
+      "db:migrate:prod": "wrangler d1 execute ai-work-mgmt-db --env production --file=database/schema.sql"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "@cloudflare/workers-types": "^4.20231218.0"
+    }
+  }
