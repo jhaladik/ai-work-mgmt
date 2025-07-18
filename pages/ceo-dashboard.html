@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEO Dashboard - AI Work Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#8B5CF6'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-primary">AI WorkFlow</h1>
+                    <span class="ml-4 px-2 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded">CEO Dashboard</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userWelcome" class="text-gray-700 text-sm"></span>
+                    <button onclick="logout()" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Business Outcomes</h1>
+                    <p class="text-gray-600 mt-2">Define and track strategic business outcomes with AI-powered planning</p>
+                </div>
+                <button onclick="showCreateModal()" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                    </svg>
+                    Create Outcome
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Active Outcomes</dt>
+                                <dd class="text-lg font-medium text-gray-900" id="activeOutcomes">-</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Success Rate</dt>
+                                <dd class="text-lg font-medium text-gray-900" id="successRate">-</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">AI Confidence</dt>
+                                <dd class="text-lg font-medium text-gray-900" id="aiConfidence">-</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Avg Timeline</dt>
+                                <dd class="text-lg font-medium text-gray-900" id="avgTimeline">-</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Outcomes Table -->
+        <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Your Business Outcomes</h3>
+                    <div class="flex space-x-2">
+                        <select id="statusFilter" onchange="filterOutcomes()" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                            <option value="">All Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="priorityFilter" onchange="filterOutcomes()" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                            <option value="">All Priority</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="outcomesContainer" class="overflow-x-auto">
+                    <div class="flex items-center justify-center py-8">
+                        <svg class="animate-spin h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="ml-2 text-gray-600">Loading outcomes...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Outcome Modal -->
+    <div id="createModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Create Business Outcome</h3>
+                    <button onclick="hideCreateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <form id="outcomeForm" class="px-6 py-4 space-y-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700">Outcome Title</label>
+                        <input type="text" id="title" name="title" required
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary"
+                               placeholder="e.g., Increase Q4 revenue by 25%">
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea id="description" name="description" rows="3"
+                                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary"
+                                  placeholder="Detailed description of the outcome and its strategic importance"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="targetValue" class="block text-sm font-medium text-gray-700">Target Value</label>
+                            <input type="text" id="targetValue" name="target_value" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary"
+                                   placeholder="e.g., €2.1M additional revenue">
+                        </div>
+                        <div>
+                            <label for="targetMetric" class="block text-sm font-medium text-gray-700">Success Metric</label>
+                            <input type="text" id="targetMetric" name="target_metric"
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary"
+                                   placeholder="e.g., Monthly recurring revenue">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <input type="date" id="startDate" name="timeline_start" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label for="endDate" class="block text-sm font-medium text-gray-700">Target Date</label>
+                            <input type="date" id="endDate" name="timeline_end" required
+                                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                        <select id="priority" name="priority"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary focus:border-primary">
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="hideCreateModal()" 
+                                class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
+                            <span id="createSpinner" class="hidden">
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
+                            <span id="createText">Create Outcome</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = 'https://ai-work-mgmt.jhaladik.workers.dev/api';
+        let currentOutcomes = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadDashboardData();
+            setDefaultDates();
+        });
+
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!token || user.role !== 'ceo') {
+                window.location.href = '/dashboard.html';
+                return;
+            }
+            
+            document.getElementById('userWelcome').textContent = `Welcome, ${user.name}`;
+        }
+
+        function setDefaultDates() {
+            const now = new Date();
+            const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            const endDate = new Date(now.getFullYear() + 1, now.getMonth(), 0);
+            
+            document.getElementById('startDate').valueAsDate = startDate;
+            document.getElementById('endDate').valueAsDate = endDate;
+        }
+
+        async function loadDashboardData() {
+            try {
+                await Promise.all([
+                    loadStats(),
+                    loadOutcomes()
+                ]);
+            } catch (error) {
+                console.error('Dashboard loading error:', error);
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        async function loadStats() {
+            try {
+                // For now using mock data - will be replaced with real API
+                document.getElementById('activeOutcomes').textContent = '3';
+                document.getElementById('successRate').textContent = '89%';
+                document.getElementById('aiConfidence').textContent = '92%';
+                document.getElementById('avgTimeline').textContent = '4.2mo';
+            } catch (error) {
+                console.error('Stats loading error:', error);
+            }
+        }
+
+        async function loadOutcomes() {
+            try {
+                const response = await makeAuthenticatedRequest('/outcomes');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentOutcomes = data.outcomes;
+                    renderOutcomes(currentOutcomes);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Outcomes loading error:', error);
+                document.getElementById('outcomesContainer').innerHTML = `
+                    <div class="text-center py-8 text-red-600">
+                        Failed to load outcomes: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function renderOutcomes(outcomes) {
+            const container = document.getElementById('outcomesContainer');
+            
+            if (outcomes.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No outcomes yet</h3>
+                        <p class="mt-1 text-sm text-gray-500">Get started by creating your first business outcome.</p>
+                        <div class="mt-6">
+                            <button onclick="showCreateModal()" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-blue-700">
+                                Create Outcome
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const table = `
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Outcome</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timeline</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">AI Analysis</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        ${outcomes.map(outcome => `
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-medium text-gray-900">${outcome.title}</div>
+                                    <div class="text-sm text-gray-500">${outcome.description || 'No description'}</div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900">${outcome.target_value}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                    ${new Date(outcome.timeline_start).toLocaleDateString()} - 
+                                    ${new Date(outcome.timeline_end).toLocaleDateString()}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityClasses(outcome.priority)}">
+                                        ${outcome.priority}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClasses(outcome.status)}">
+                                        ${outcome.status}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-sm">
+                                    ${outcome.ai_analysis ? 
+                                        `<span class="text-green-600">✓ Complete</span>` : 
+                                        `<button onclick="analyzeOutcome('${outcome.id}')" class="text-primary hover:text-blue-700">Run Analysis</button>`
+                                    }
+                                </td>
+                                <td class="px-6 py-4 text-sm font-medium">
+                                    <button onclick="viewOutcome('${outcome.id}')" class="text-primary hover:text-blue-700 mr-3">View</button>
+                                    <button onclick="editOutcome('${outcome.id}')" class="text-gray-600 hover:text-gray-900">Edit</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = table;
+        }
+
+        function getPriorityClasses(priority) {
+            const classes = {
+                low: 'bg-gray-100 text-gray-800',
+                medium: 'bg-blue-100 text-blue-800',
+                high: 'bg-yellow-100 text-yellow-800',
+                critical: 'bg-red-100 text-red-800'
+            };
+            return classes[priority] || classes.medium;
+        }
+
+        function getStatusClasses(status) {
+            const classes = {
+                draft: 'bg-gray-100 text-gray-800',
+                active: 'bg-green-100 text-green-800',
+                completed: 'bg-blue-100 text-blue-800',
+                cancelled: 'bg-red-100 text-red-800'
+            };
+            return classes[status] || classes.draft;
+        }
+
+        // Modal functions
+        function showCreateModal() {
+            document.getElementById('createModal').classList.remove('hidden');
+        }
+
+        function hideCreateModal() {
+            document.getElementById('createModal').classList.add('hidden');
+            document.getElementById('outcomeForm').reset();
+            setDefaultDates();
+        }
+
+        // Form submission
+        document.getElementById('outcomeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                target_value: formData.get('target_value'),
+                target_metric: formData.get('target_metric'),
+                timeline_start: new Date(formData.get('timeline_start')).getTime(),
+                timeline_end: new Date(formData.get('timeline_end')).getTime(),
+                priority: formData.get('priority')
+            };
+
+            try {
+                setLoading(true);
+                
+                const response = await makeAuthenticatedRequest('/outcomes', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('Outcome created successfully!', 'success');
+                    hideCreateModal();
+                    loadOutcomes();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Create outcome error:', error);
+                showNotification('Failed to create outcome: ' + error.message, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        function setLoading(loading) {
+            const spinner = document.getElementById('createSpinner');
+            const text = document.getElementById('createText');
+            const button = document.querySelector('#outcomeForm button[type="submit"]');
+            
+            if (loading) {
+                spinner.classList.remove('hidden');
+                text.textContent = 'Creating...';
+                button.disabled = true;
+            } else {
+                spinner.classList.add('hidden');
+                text.textContent = 'Create Outcome';
+                button.disabled = false;
+            }
+        }
+
+        async function analyzeOutcome(outcomeId) {
+            try {
+                showNotification('Starting AI analysis...', 'info');
+                
+                const response = await makeAuthenticatedRequest(`/outcomes/${outcomeId}/analyze`, {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('AI analysis completed!', 'success');
+                    loadOutcomes(); // Refresh to show analysis status
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Analysis error:', error);
+                showNotification('AI analysis failed: ' + error.message, 'error');
+            }
+        }
+
+        function filterOutcomes() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            
+            let filtered = currentOutcomes;
+            
+            if (statusFilter) {
+                filtered = filtered.filter(outcome => outcome.status === statusFilter);
+            }
+            
+            if (priorityFilter) {
+                filtered = filtered.filter(outcome => outcome.priority === priorityFilter);
+            }
+            
+            renderOutcomes(filtered);
+        }
+
+        // Utility functions
+        async function makeAuthenticatedRequest(endpoint, options = {}) {
+            const token = localStorage.getItem('authToken');
+            
+            return fetch(`${API_BASE}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    ...options.headers
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            // Simple notification implementation
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg max-w-sm ${
+                type === 'error' ? 'bg-red-500 text-white' :
+                type === 'success' ? 'bg-green-500 text-white' :
+                'bg-blue-500 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+
+        function viewOutcome(outcomeId) {
+            // Navigate to detailed outcome view
+            window.location.href = `/outcome-detail.html?id=${outcomeId}`;
+        }
+
+        function editOutcome(outcomeId) {
+            // Implementation for editing outcomes
+            showNotification('Edit functionality coming soon!', 'info');
+        }
+    </script>
+</body>
+</html>
