@@ -3,7 +3,8 @@
 
 class AIWorkManagementApp {
     constructor() {
-        this.apiBase = '/api'; // Change this to your actual API endpoint
+        // Point to your deployed worker
+        this.apiBase = 'https://ai-work-mgmt.jhaladik.workers.dev/api';
         this.user = null;
         this.authToken = null;
         
